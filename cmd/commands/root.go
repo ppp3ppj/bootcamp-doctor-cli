@@ -37,6 +37,7 @@ func Execute() {
 
     // Register Top Level Commands
     //rootCmd.AddCommand()
+    rootCmd.AddCommand(NewCmdVersion())
     if err := rootCmd.Execute(); err != nil {
         fmt.Println(err)
         os.Exit(1)
