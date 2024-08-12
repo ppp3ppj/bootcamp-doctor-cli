@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/ppp3ppj/bootcamp-doctor-cli/internal/tui"
 	"github.com/spf13/cobra"
 )
 
@@ -19,10 +21,17 @@ const (
 
 func Execute() {
     rootCmd := &cobra.Command{
-        Use: "bootcamp",
+        Use: "bc",
         Long: letters,
         CompletionOptions: cobra.CompletionOptions{
             DisableDefaultCmd: true,
+        },
+        RunE: func(cmd *cobra.Command, args[] string) error {
+            pg := tui.NewModel()
+            if err := tea.NewProgram(pg).Start(); err != nil {
+                return err
+            }
+            return nil
         },
     }
 
