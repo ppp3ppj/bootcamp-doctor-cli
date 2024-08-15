@@ -21,7 +21,7 @@ var (
 )
 
 type InitPromptModel struct {
-	packages []string
+	packages []resources.PackageDoctor
 	index    int
 	width    int
 	height   int
@@ -47,7 +47,7 @@ func NewModel() InitPromptModel {
 }
 
 func (m InitPromptModel) Init() tea.Cmd {
-    return tea.Batch(checkPackage(m.packages[m.index]), m.spinner.Tick)
+    return tea.Batch(checkPackage(m.packages[m.index].Name), m.spinner.Tick)
 }
 
 func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -77,7 +77,7 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Batch(
 			progressCmd,
 			tea.Printf("%s %s", checkMark, pkg),     // print success message above our program
-			checkPackage(m.packages[m.index]), // download the next package
+			checkPackage(m.packages[m.index].Name), // download the next package
 		)
 	case spinner.TickMsg:
 		var cmd tea.Cmd
@@ -107,7 +107,7 @@ func (m InitPromptModel) View() string {
     prog := m.progress.View()
     cellsAvail := utils.Max(0, m.width - lipgloss.Width(spin+prog+pkgCount))
 
-    pkgName := currentPkgNameStyle.Render(m.packages[m.index])
+    pkgName := currentPkgNameStyle.Render(m.packages[m.index].Name)
     info := lipgloss.NewStyle().MaxWidth(cellsAvail).Render("Installing " + pkgName)
 
     cellsRemaining := utils.Max(0, m.width - lipgloss.Width(spin+info+prog+pkgName))
