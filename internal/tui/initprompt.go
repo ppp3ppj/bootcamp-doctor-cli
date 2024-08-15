@@ -60,7 +60,7 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 	case installedPkgMsg:
-		pkg := m.packages[m.index]
+		pkg := m.packages[m.index].Name
 		if m.index >= len(m.packages)-1 {
 			// Everything's been installed. We're done!
 			m.done = true
