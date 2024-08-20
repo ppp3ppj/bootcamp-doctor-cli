@@ -18,6 +18,7 @@ var (
     currentPkgNameStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("211"))
     doneStyle = lipgloss.NewStyle().Margin(1, 2)
     checkMark = lipgloss.NewStyle().Foreground(lipgloss.Color(42)).SetString("✓")
+    crossMark = lipgloss.NewStyle().Foreground(lipgloss.Color(42)).SetString("✓")
 )
 
 type InitPromptModel struct {
@@ -47,7 +48,7 @@ func NewModel() InitPromptModel {
 }
 
 func (m InitPromptModel) Init() tea.Cmd {
-    return tea.Batch(checkPackage(m.packages[m.index].Name), m.spinner.Tick)
+    return tea.Batch(checkPackage(m.packages[m.index]), m.spinner.Tick)
 }
 
 func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -77,7 +78,7 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, tea.Batch(
 			progressCmd,
 			tea.Printf("%s %s", checkMark, pkg),     // print success message above our program
-			checkPackage(m.packages[m.index].Name), // download the next package
+			checkPackage(m.packages[m.index]), // download the next package
 		)
 	case spinner.TickMsg:
 		var cmd tea.Cmd
@@ -118,9 +119,9 @@ func (m InitPromptModel) View() string {
 
 type installedPkgMsg string
 
-func checkPackage(pkg string) tea.Cmd {
+func checkPackage(pkg resources.PackageDoctor) tea.Cmd {
     d := time.Microsecond * time.Duration(rand.Intn(500)) //nolint:gosec
     return tea.Tick(d, func(t time.Time) tea.Msg{
-        return installedPkgMsg(pkg)
+        return installedPkgMsg(pkg.Name)
     })
 }
