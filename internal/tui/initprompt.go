@@ -31,6 +31,14 @@ type InitPromptModel struct {
 	done     bool
 }
 
+func (m *InitPromptModel) packageStatus() lipgloss.Style {
+    if m.done {
+        return checkMark
+    } else {
+        return crossMark
+    }
+}
+
 func NewModel() InitPromptModel {
     p := progress.New(
         progress.WithDefaultGradient(),
@@ -68,7 +76,7 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.done = true
 			return m, tea.Sequence(
 				//tea.Printf("%s %s", checkMark, pkg), // print the last success message
-				tea.Printf("%s %s", checkMark, pkg), // print the last success message
+				tea.Printf("%s %s", m.packageStatus(), pkg), // print the last success message
 				tea.Quit,                            // exit the program
 			)
 		}
