@@ -18,7 +18,7 @@ var (
     currentPkgNameStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("211"))
     doneStyle = lipgloss.NewStyle().Margin(1, 2)
     checkMark = lipgloss.NewStyle().Foreground(lipgloss.Color(42)).SetString("✓")
-    crossMark = lipgloss.NewStyle().Foreground(lipgloss.Color(42)).SetString("✓")
+    crossMark = lipgloss.NewStyle().Foreground(lipgloss.Color(42)).SetString("⤫")
 )
 
 type InitPromptModel struct {
@@ -64,8 +64,10 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		pkg := m.packages[m.index].Name
 		if m.index >= len(m.packages)-1 {
 			// Everything's been installed. We're done!
+
 			m.done = true
 			return m, tea.Sequence(
+				//tea.Printf("%s %s", checkMark, pkg), // print the last success message
 				tea.Printf("%s %s", checkMark, pkg), // print the last success message
 				tea.Quit,                            // exit the program
 			)
