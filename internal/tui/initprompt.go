@@ -70,10 +70,11 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	case installedPkgMsg:
 		pkg := m.packages[m.index].Name
+        // can commend this. this is check last pkg
 		if m.index >= len(m.packages)-1 {
 			// Everything's been installed. We're done!
 
-			m.done = true
+			//m.done = true
 			return m, tea.Sequence(
 				//tea.Printf("%s %s", checkMark, pkg), // print the last success message
 				tea.Printf("%s %s", m.packageStatus(), pkg), // print the last success message
@@ -81,13 +82,15 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			)
 		}
 
+        // set status for all pkg
+        m.done = true
 		// Update progress bar
 		m.index++
 		progressCmd := m.progress.SetPercent(float64(m.index) / float64(len(m.packages)))
 
 		return m, tea.Batch(
 			progressCmd,
-			tea.Printf("%s %s", checkMark, pkg),     // print success message above our program
+			tea.Printf("%s %s", m.packageStatus(), pkg),     // print success message above our program
 			checkPackage(m.packages[m.index]), // download the next package
 		)
 	case spinner.TickMsg:
