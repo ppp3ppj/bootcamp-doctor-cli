@@ -14,6 +14,14 @@ var packages = []PackageDoctor{
         Name: "node",
         VersionCommand: "node -v",
     },
+    PackageDoctor{
+        Name: "zig",
+        VersionCommand: "zig version",
+    },
+    PackageDoctor{
+        Name: "ruby",
+        VersionCommand: "ruby -v",
+    },
 }
 
 func GetPackages() []PackageDoctor {

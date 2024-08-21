@@ -3,6 +3,7 @@ package tui
 import (
 	"fmt"
 	"math/rand"
+	"os/exec"
 	"strings"
 	"time"
 
@@ -71,10 +72,11 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case installedPkgMsg:
 		pkg := m.packages[m.index].Name
         // can commend this. this is check last pkg
+
 		if m.index >= len(m.packages)-1 {
 			// Everything's been installed. We're done!
 
-			//m.done = true
+            m.done = checkInstalledCommend(m.packages[m.index].VersionCommand)
 			return m, tea.Sequence(
 				//tea.Printf("%s %s", checkMark, pkg), // print the last success message
 				tea.Printf("%s %s", m.packageStatus(), pkg), // print the last success message
@@ -82,8 +84,8 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			)
 		}
 
-        // set status for all pkg
-        m.done = true
+        //_ = checkInstalledCommend(m.packages[m.index].VersionCommand)
+        m.done = checkInstalledCommend(m.packages[m.index].VersionCommand)
 		// Update progress bar
 		m.index++
 		progressCmd := m.progress.SetPercent(float64(m.index) / float64(len(m.packages)))
@@ -111,9 +113,9 @@ func (m InitPromptModel) View() string {
     n := len(m.packages)
     w := lipgloss.Width(fmt.Sprintf("%d", n))
 
-    if m.done {
+    //if m.done {
         return doneStyle.Render(fmt.Sprintf("Done! Installed %d packages.\n", n))
-    }
+    //}
 
     pkgCount := fmt.Sprintf(" %*d/%*d", w, m.index, w, n)
 
@@ -137,4 +139,16 @@ func checkPackage(pkg resources.PackageDoctor) tea.Cmd {
     return tea.Tick(d, func(t time.Time) tea.Msg{
         return installedPkgMsg(pkg.Name)
     })
+}
+
+func checkInstalledCommend(command string) bool {
+    //cmd, b := exec.Command("go", "version"), new(strings.Builder)
+    cmds := strings.Split(command ," ")
+    cmd, b := exec.Command(cmds[0], cmds[1]), new(strings.Builder)
+    cmd.Stdout = b
+    cmd.Run()
+    if len(b.String()) > 0 {
+        return true
+    }
+    return false
 }
