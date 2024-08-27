@@ -30,6 +30,7 @@ type InitPromptModel struct {
 	spinner  spinner.Model
 	progress progress.Model
 	done     bool
+    doneCount int
 }
 
 func (m *InitPromptModel) packageStatus() lipgloss.Style {
@@ -77,6 +78,9 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// Everything's been installed. We're done!
 
             m.done = checkInstalledCommend(m.packages[m.index].VersionCommand)
+            if m.done {
+                m.doneCount ++
+            }
 			return m, tea.Sequence(
 				//tea.Printf("%s %s", checkMark, pkg), // print the last success message
 				tea.Printf("%s %s", m.packageStatus(), pkg), // print the last success message
@@ -86,6 +90,9 @@ func (m InitPromptModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
         //_ = checkInstalledCommend(m.packages[m.index].VersionCommand)
         m.done = checkInstalledCommend(m.packages[m.index].VersionCommand)
+        if m.done {
+            m.doneCount ++
+        }
 		// Update progress bar
 		m.index++
 		progressCmd := m.progress.SetPercent(float64(m.index) / float64(len(m.packages)))
@@ -114,7 +121,7 @@ func (m InitPromptModel) View() string {
     w := lipgloss.Width(fmt.Sprintf("%d", n))
 
     //if m.done {
-        return doneStyle.Render(fmt.Sprintf("Done! Installed %d packages.\n", n))
+    return doneStyle.Render(fmt.Sprintf("Current: %d packages. Installed: %d packages\n", n, m.doneCount))
     //}
 
     pkgCount := fmt.Sprintf(" %*d/%*d", w, m.index, w, n)
