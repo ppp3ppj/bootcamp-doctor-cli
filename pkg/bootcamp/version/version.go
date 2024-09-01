@@ -8,5 +8,5 @@ var (
 )
 
 func Print() string {
-    return fmt.Sprintf("%s-%s", Version, Hash)
+    return fmt.Sprintf("%s-%s", Hash, Version)
 }
