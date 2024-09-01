@@ -4,7 +4,7 @@ import "fmt"
 
 var (
     Version = "dev"
-    Hash = ""
+    Hash = "0.0.1"
 )
 
 func Print() string {
