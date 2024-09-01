@@ -10,6 +10,8 @@ var packages = []PackageDoctor{
     {"node", "node -v"},
     {"zig", "zig version"},
     {"ruby", "ruby -v"},
+    {"nvm", "nvm -v"},
+    {"rbenv", "rbenv -v"},
 }
 
 func GetPackages() []PackageDoctor {
