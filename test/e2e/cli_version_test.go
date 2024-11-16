@@ -26,7 +26,7 @@ func TestCLIVersionE2E(t *testing.T) {
 
 	// Validate output using regex to match version and build format
 	versionPattern := `CLI Version: \d+\.\d+\.\d+` // Matches something like "CLI Version: 0.0.1"
-	buildPattern := `Build: [a-zA-Z0-9]+`        // Matches something like "Build: dev"
+	buildPattern := `Build: [a-zA-Z0-9]+`          // Matches something like "Build: dev"
 
 	// Compile regex
 	versionRegex := regexp.MustCompile(versionPattern)

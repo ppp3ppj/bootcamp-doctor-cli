@@ -10,7 +10,7 @@ import (
 )
 
 const (
-    letters = `
+	letters = `
 ▄▄▄▄·            ▄▄▄▄▄ ▄▄·  ▄▄▄· • ▌ ▄ ·.  ▄▄▄·    ·▄▄▄▄        ▄▄· ▄▄▄▄▄      ▄▄▄
 ▐█ ▀█▪▪     ▪    •██  ▐█ ▌▪▐█ ▀█ ·██ ▐███▪▐█ ▄█    ██▪ ██▪     ▐█ ▌▪•██  ▪     ▀▄ █·
 ▐█▀▀█▄ ▄█▀▄  ▄█▀▄ ▐█.▪██ ▄▄▄█▀▀█ ▐█ ▌▐▌▐█· ██▀·    ▐█· ▐█▌▄█▀▄ ██ ▄▄ ▐█.▪ ▄█▀▄ ▐▀▀▄
@@ -20,25 +20,23 @@ const (
 )
 
 func Execute() {
-    rootCmd := &cobra.Command{
-        Use: "bc",
-        Long: letters,
-        CompletionOptions: cobra.CompletionOptions{
-            DisableDefaultCmd: true,
-        },
-    }
+	rootCmd := &cobra.Command{
+		Use:  "bc",
+		Long: letters,
+		CompletionOptions: cobra.CompletionOptions{
+			DisableDefaultCmd: true,
+		},
+	}
 
-    cliVersion := domain.NewCLIVersion("0.0.1", "dev")
-    cliVersionUseCase := &application.CLIVersionUseCase{cliVersion}
+	cliVersion := domain.NewCLIVersion("0.0.1", "dev")
+	cliVersionUseCase := &application.CLIVersionUseCase{cliVersion}
 
-    // Register Top Level Commands
-    //rootCmd.AddCommand()
-    rootCmd.AddCommand(NewCmdDoctor())
-    rootCmd.AddCommand(NewCmdCLIVersion(cliVersionUseCase))
-    if err := rootCmd.Execute(); err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
+	// Register Top Level Commands
+	//rootCmd.AddCommand()
+	rootCmd.AddCommand(NewCmdDoctor())
+	rootCmd.AddCommand(NewCmdCLIVersion(cliVersionUseCase))
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
-
-
