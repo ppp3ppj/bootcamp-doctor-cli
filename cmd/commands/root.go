@@ -3,6 +3,9 @@ package commands
 import (
 	"fmt"
 	"os"
+
+	application "github.com/ppp3ppj/bootcamp-doctor-cli/application/cli-version"
+	domain "github.com/ppp3ppj/bootcamp-doctor-cli/domain/cli-version"
 	"github.com/spf13/cobra"
 )
 
@@ -25,10 +28,13 @@ func Execute() {
         },
     }
 
+    cliVersion := domain.NewCLIVersion("0.0.1", "dev")
+    cliVersionUseCase := &application.CLIVersionUseCase{cliVersion}
+
     // Register Top Level Commands
     //rootCmd.AddCommand()
-    rootCmd.AddCommand(NewCmdVersion())
     rootCmd.AddCommand(NewCmdDoctor())
+    rootCmd.AddCommand(NewCmdCLIVersion(cliVersionUseCase))
     if err := rootCmd.Execute(); err != nil {
         fmt.Println(err)
         os.Exit(1)

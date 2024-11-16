@@ -5,3 +5,6 @@ run:
 
 build-linux64:
 	env GOOS=linux GOARCH=amd64 go build -o ./dist/bootcamp-cli ./cmd/main.go
+
+run-test:
+	go test -v -cover --short -race  ./...
