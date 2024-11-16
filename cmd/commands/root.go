@@ -33,7 +33,6 @@ func Execute() {
 
     // Register Top Level Commands
     //rootCmd.AddCommand()
-    rootCmd.AddCommand(NewCmdVersion())
     rootCmd.AddCommand(NewCmdDoctor())
     rootCmd.AddCommand(NewCmdCLIVersion(cliVersionUseCase))
     if err := rootCmd.Execute(); err != nil {

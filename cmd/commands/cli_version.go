@@ -12,7 +12,7 @@ import (
 
 func NewCmdCLIVersion(useCase *application.CLIVersionUseCase) *cobra.Command {
     return &cobra.Command{
-        Use: "cliversion",
+        Use: "version",
         Short: "Displays the current CLI version",
         Run: func(cmd *cobra.Command, args []string) {
             cliVersion := useCase.GetCurrentVersion()
