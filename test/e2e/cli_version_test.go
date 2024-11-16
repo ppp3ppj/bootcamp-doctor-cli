@@ -10,7 +10,7 @@ import (
 
 func TestCLIVersionE2E(t *testing.T) {
 	// Set the correct working directory
-	cmd := exec.Command("go", "run", "cmd/main.go", "cliversion")
+	cmd := exec.Command("go", "run", "cmd/main.go", "version")
 	cmd.Dir = "../.." // Adjust path if necessary to point to your project root
 
 	// Capture output
