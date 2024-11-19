@@ -41,7 +41,7 @@ func (m *InitPromptModel) packageStatus() lipgloss.Style {
 	}
 }
 
-func NewModel() InitPromptModel {
+func NewDoctorModel() InitPromptModel {
 	p := progress.New(
 		progress.WithDefaultGradient(),
 		progress.WithWidth(40),

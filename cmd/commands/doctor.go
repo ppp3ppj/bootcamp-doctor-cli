@@ -11,7 +11,7 @@ func NewCmdDoctor() *cobra.Command {
 		Use:   "doctor",
 		Short: "doctor run check package version",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			pg := tui.NewModel()
+			pg := tui.NewDoctorModel()
 			if err := tea.NewProgram(pg).Start(); err != nil {
 				return err
 			}

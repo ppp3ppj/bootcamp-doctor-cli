@@ -2,59 +2,66 @@ package application
 
 import (
 	"errors"
-	"os/exec"
+
+	domain "github.com/ppp3ppj/bootcamp-doctor-cli/domain/package"
+	"github.com/spf13/viper"
 )
 
-type PackageManager struct {
-    Packages map[string]string // Key: Package name, Value: Command
+
+type PackageManagerImpl struct{}
+
+func (pm *PackageManagerImpl) GetAll() []domain.Package {
+	var packages []domain.Package
+	err := viper.UnmarshalKey("packages", &packages)
+	if err != nil {
+		return nil
+	}
+	return packages
 }
 
-// Add a package
-func (pm *PackageManager) AddPackage(name, cmd string) error {
-    if _, exists := pm.Packages[name]; exists {
-        return errors.New("package already exits");
-    }
-
-    pm.Packages[name] = cmd
-    return nil
+func (pm *PackageManagerImpl) Get(name string) (domain.Package, bool) {
+	packages := pm.GetAll()
+	for _, pkg := range packages {
+		if pkg.Name == name {
+			return pkg, true
+		}
+	}
+	return domain.Package{}, false
 }
 
-// Get all packages
-func (pm *PackageManager) ListPackages() map[string]string {
-    return pm.Packages
+func (pm *PackageManagerImpl) Create(pkg domain.Package) error {
+	packages := pm.GetAll()
+	for _, p := range packages {
+		if p.Name == pkg.Name {
+			return errors.New("package already exists")
+		}
+	}
+	packages = append(packages, pkg)
+	viper.Set("packages", packages)
+	return viper.WriteConfig()
 }
 
-// Update a package
-func (pm *PackageManager) UpdatePackage(name, newCmd string) error {
-    if _, exists := pm.Packages[name]; !exists {
-        return errors.New("package not found")
-    }
-
-    pm.Packages[name] = newCmd
-    return nil
+func (pm *PackageManagerImpl) Update(name string, pkg domain.Package) error {
+	packages := pm.GetAll()
+	for i, p := range packages {
+		if p.Name == name {
+			packages[i] = pkg
+			viper.Set("packages", packages)
+			return viper.WriteConfig()
+		}
+	}
+	return errors.New("package not found")
 }
 
-// Delete a package
-func (pm *PackageManager) DeletePackage(name string) error {
-    if _, exists := pm.Packages[name]; !exists {
-        return errors.New("package not found")
-    }
-
-    delete(pm.Packages, name)
-    return nil
-}
-
-// Check the version of a package
-func (pm *PackageManager) CheckVersion(name string) (string, error) {
-    cmdStr, exists := pm.Packages[name]
-    if !exists {
-        return "", errors.New("package not found")
-    }
-
-    output, err := exec.Command("sh", "-c", cmdStr).Output()
-    if err != nil {
-        return "", err
-    }
-    return string(output), nil
+func (pm *PackageManagerImpl) Delete(name string) error {
+	packages := pm.GetAll()
+	for i, p := range packages {
+		if p.Name == name {
+			packages = append(packages[:i], packages[i+1:]...)
+			viper.Set("packages", packages)
+			return viper.WriteConfig()
+		}
+	}
+	return errors.New("package not found")
 }
 
