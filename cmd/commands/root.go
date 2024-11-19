@@ -31,10 +31,13 @@ func Execute() {
 	cliVersion := domain.NewCLIVersion("0.0.1", "dev")
 	cliVersionUseCase := &application.CLIVersionUseCase{cliVersion}
 
+
+
 	// Register Top Level Commands
 	//rootCmd.AddCommand()
 	rootCmd.AddCommand(NewCmdDoctor())
 	rootCmd.AddCommand(NewCmdCLIVersion(cliVersionUseCase))
+    rootCmd.AddCommand(NewCmdManage())
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
